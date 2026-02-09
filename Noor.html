@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إلى الحجية الدكتورة نور سميسم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #b8860b;
+            --love-red: #e31b23;
+            --bg-cream: #fffdf9;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: var(--bg-cream);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 100 100'%3E%3Cpath d='M25,50 C25,40 40,30 50,45 C60,30 75,40 75,50 C75,65 50,80 50,80 C50,80 25,65 25,50' fill='%23ffb6c1' opacity='0.1'/%3E%3C/svg%3E");
+            font-family: 'Amiri', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* شاشة الغلاف */
+        #cover {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-cream);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: 0.8s ease-out;
+        }
+
+        .teddy { font-size: 100px; cursor: pointer; animation: bounce 2s infinite; position: relative; }
+        .teddy::after { content: '❤️'; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 30px; animation: pulse 0.8s infinite; }
+
+        /* البطاقة الرئيسية */
+        #mainCard {
+            display: none;
+            width: 90%;
+            max-width: 650px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            border: 4px double var(--gold);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            text-align: center;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        .royal-header { font-family: 'Aref Ruqaa', serif; color: var(--love-red); font-size: 2rem; margin-bottom: 5px; }
+        
+        /* منطقة الرسالة (في الأعلى) */
+        #messageArea {
+            font-size: 1.4rem;
+            color: #444;
+            line-height: 1.8;
+            margin: 20px 0;
+            min-height: 120px;
+            text-align: justify;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        /* منطقة العداد (في الأسفل) */
+        .timer-title { font-weight: bold; color: var(--gold); margin-top: 20px; font-size: 1.1rem; }
+        .hearts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px auto;
+            max-width: 300px;
+        }
+
+        @media (min-width: 400px) {
+            .hearts-grid { grid-template-columns: repeat(4, 1fr); max-width: 100%; }
+        }
+
+        .heart-box {
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23d4af37' d='M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z'/%3E%3C/svg%3E") no-repeat center/contain;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .total-days-badge { color: var(--love-red); font-weight: bold; font-size: 1.2rem; margin: 15px 0; }
+
+        .footer-dates {
+            background: #fffcf5;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: #888;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes pulse { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.2); } 100% { transform: translateX(-50%) scale(1); } }
+    </style>
+</head>
+<body>
+
+    <div id="cover" onclick="reveal()">
+        <div class="teddy">🧸</div>
+        <h2 style="color: var(--gold); font-family: 'Aref Ruqaa'; text-align: center; padding: 0 20px;">رسالة حب ملكية للدكتورة نور..</h2>
+        <p style="color: #999;">(انقري لفتح المفاجأة)</p>
+    </div>
+
+    <div id="mainCard">
+        <div class="royal-header">الحجية الدكتورة نور سميسم</div>
+        
+        <div id="messageArea"></div>
+
+        <div class="timer-title">عدّاد رحلة عشقنا المستمرة:</div>
+        <div class="hearts-grid" id="timer"></div>
+        <div id="totalDays" class="total-days-badge"></div>
+
+        <div class="footer-dates">
+            <span>ميلادك: 06.02.1986</span>
+            <span>زواجنا: 09.10.2008</span>
+            <span>ميلادي: 01.01.1984</span>
+        </div>
+    </div>
+
+    <script>
+        const weddingDate = new Date('2008-10-09T00:00:00');
+        const text = `حبيبتي ونور عيني "نور".. 
+هذه الكلمات ليست مجرد حبر، بل هي نبضات قلبي التي لم تتوقف عن حبك منذ عام 2008. 
+أنتِ لستِ فقط زوجتي والدكتورة التي أفتخر بها، بل أنتِ "الحجية" التي تملأ بيتنا بالسكينة والبركة. 
+كل يوم يمر معكِ هو عمرٌ كامل من السعادة. شكراً لأنكِ في حياتي، وكل عيد حب ونحن معاً للأبد.`;
+
+        function reveal() {
+            document.getElementById('cover').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('cover').style.display = 'none';
+                document.getElementById('mainCard').style.display = 'block';
+                typeWriter();
+                startClock();
+            }, 800);
+        }
+
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("messageArea").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+
+        function startClock() {
+            setInterval(() => {
+                const now = new Date();
+                const diff = now - weddingDate;
+
+                const y = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+                const d = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+                const total = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+                document.getElementById('timer').innerHTML = `
+                    <div class="heart-box">${y}<br><small>سنة</small></div>
+                    <div class="heart-box">${d}<br><small>يوم</small></div>
+                    <div class="heart-box">${h}<br><small>ساعة</small></div>
+                    <div class="heart-box">${s}<br><small>ثانية</small></div>
+                `;
+                document.getElementById('totalDays').innerText = `أحببتكِ حتى الآن ${total.toLocaleString()} يوماً..`;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

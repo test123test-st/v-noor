@@ -1,186 +1,460 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إلى الحجية الدكتورة نور سميسم</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diwan AI Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --gold: #b8860b;
-            --love-red: #e31b23;
-            --bg-cream: #fffdf9;
-        }
+      body {
+        font-family: "Cairo", sans-serif;
+      }
 
-        body, html {
-            height: 100%;
-            margin: 0;
-            background-color: var(--bg-cream);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 100 100'%3E%3Cpath d='M25,50 C25,40 40,30 50,45 C60,30 75,40 75,50 C75,65 50,80 50,80 C50,80 25,65 25,50' fill='%23ffb6c1' opacity='0.1'/%3E%3C/svg%3E");
-            font-family: 'Amiri', serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      .paper {
+        background: white;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+        border: 1px solid #e4e4e7;
+      }
 
-        /* شاشة الغلاف */
-        #cover {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-cream);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: 0.8s ease-out;
-        }
+      .poem-line {
+        margin-bottom: var(--line-gap, 1rem);
+      }
 
-        .teddy { font-size: 100px; cursor: pointer; animation: bounce 2s infinite; position: relative; }
-        .teddy::after { content: '❤️'; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 30px; animation: pulse 0.8s infinite; }
+      .group-gap {
+        margin-bottom: var(--paragraph-gap, 1.2rem);
+      }
 
-        /* البطاقة الرئيسية */
-        #mainCard {
-            display: none;
-            width: 90%;
-            max-width: 650px;
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            border: 4px double var(--gold);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-            text-align: center;
-            max-height: 95vh;
-            overflow-y: auto;
-        }
+      .verse-grid {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+      }
 
-        .royal-header { font-family: 'Aref Ruqaa', serif; color: var(--love-red); font-size: 2rem; margin-bottom: 5px; }
-        
-        /* منطقة الرسالة (في الأعلى) */
-        #messageArea {
-            font-size: 1.4rem;
-            color: #444;
-            line-height: 1.8;
-            margin: 20px 0;
-            min-height: 120px;
-            text-align: justify;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
-        }
+      .hamish-right {
+        text-align: right;
+      }
 
-        /* منطقة العداد (في الأسفل) */
-        .timer-title { font-weight: bold; color: var(--gold); margin-top: 20px; font-size: 1.1rem; }
-        .hearts-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px auto;
-            max-width: 300px;
-        }
+      .hamish-left {
+        text-align: left;
+      }
 
-        @media (min-width: 400px) {
-            .hearts-grid { grid-template-columns: repeat(4, 1fr); max-width: 100%; }
-        }
+      .spacer {
+        color: #9ca3af;
+        padding-inline: 0.8rem;
+      }
 
-        .heart-box {
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23d4af37' d='M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z'/%3E%3C/svg%3E") no-repeat center/contain;
-            height: 80px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
+      .preview-content {
+        font-family: "Amiri", serif;
+        white-space: pre-wrap;
+        line-height: 1.8;
+      }
 
-        .total-days-badge { color: var(--love-red); font-weight: bold; font-size: 1.2rem; margin: 15px 0; }
+      .control-box {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.75rem;
+        background: #fafafa;
+      }
 
-        .footer-dates {
-            background: #fffcf5;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            color: #888;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes pulse { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.2); } 100% { transform: translateX(-50%) scale(1); } }
+      input[type="range"] {
+        width: 100%;
+      }
     </style>
-</head>
-<body>
+  </head>
 
-    <div id="cover" onclick="reveal()">
-        <div class="teddy">🧸</div>
-        <h2 style="color: var(--gold); font-family: 'Aref Ruqaa'; text-align: center; padding: 0 20px;">رسالة حب ملكية للدكتورة نور..</h2>
-        <p style="color: #999;">(انقري لفتح المفاجأة)</p>
-    </div>
+  <body class="bg-zinc-100 text-zinc-800">
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-4">
+      <header class="bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
+        <h1 class="text-2xl font-bold">Diwan AI Studio</h1>
+        <p class="text-sm text-zinc-500">محرر احترافي لتنسيق الشعر العربي وإخراج صفحات ديوان جاهزة للطباعة</p>
+      </header>
 
-    <div id="mainCard">
-        <div class="royal-header">الحجية الدكتورة نور سميسم</div>
-        
-        <div id="messageArea"></div>
+      <section class="grid lg:grid-cols-3 gap-4">
+        <div class="lg:col-span-1 space-y-4">
+          <div class="bg-white rounded-xl p-4 shadow-sm border border-zinc-200 space-y-3">
+            <h2 class="font-bold">1) معلومات المشروع</h2>
+            <label class="block text-sm">عنوان الديوان
+              <input id="diwanTitle" class="mt-1 w-full rounded border border-zinc-300 p-2" value="ديوان التأملات" />
+            </label>
+            <label class="block text-sm">عنوان القصيدة
+              <input id="poemTitle" class="mt-1 w-full rounded border border-zinc-300 p-2" value="على ضفاف الحنين" />
+            </label>
+            <label class="block text-sm">اسم الشاعر
+              <input id="poetName" class="mt-1 w-full rounded border border-zinc-300 p-2" value="شاعر مجهول" />
+            </label>
+            <label class="block text-sm">حجم الصفحة
+              <select id="pageSize" class="mt-1 w-full rounded border border-zinc-300 p-2">
+                <option value="A4">A4</option>
+                <option value="B5">B5</option>
+                <option value="A5">A5</option>
+              </select>
+            </label>
+          </div>
 
-        <div class="timer-title">عدّاد رحلة عشقنا المستمرة:</div>
-        <div class="hearts-grid" id="timer"></div>
-        <div id="totalDays" class="total-days-badge"></div>
+          <div class="bg-white rounded-xl p-4 shadow-sm border border-zinc-200 space-y-3">
+            <h2 class="font-bold">2) بنية القصيدة</h2>
+            <select id="layoutStyle" class="w-full rounded border border-zinc-300 p-2">
+              <option value="parallel">الموازي</option>
+              <option value="lame">العرجاء</option>
+              <option value="triple">الثلاثي</option>
+              <option value="center">أسلوب الوسط</option>
+              <option value="takhmees">التخميس</option>
+            </select>
+            <button id="analyzeBtn" class="w-full bg-zinc-900 text-white rounded p-2">Analyze Poem</button>
+            <p id="analysisResult" class="text-sm text-zinc-600">التحليل الذكي: بانتظار التحليل…</p>
+          </div>
 
-        <div class="footer-dates">
-            <span>ميلادك: 06.02.1986</span>
-            <span>زواجنا: 09.10.2008</span>
-            <span>ميلادي: 01.01.1984</span>
+          <div class="bg-white rounded-xl p-4 shadow-sm border border-zinc-200 space-y-3">
+            <h2 class="font-bold">3) التحكم الطباعي</h2>
+
+            <div class="control-box text-sm">حجم الخط: <span id="fontSizeVal">24</span>px
+              <input id="fontSize" type="range" min="16" max="36" value="24" />
+            </div>
+            <div class="control-box text-sm">تباعد الأسطر: <span id="lineHeightVal">1.9</span>
+              <input id="lineHeight" type="range" min="1.2" max="3" step="0.1" value="1.9" />
+            </div>
+            <div class="control-box text-sm">تباعد الفقرات: <span id="paragraphSpacingVal">16</span>px
+              <input id="paragraphSpacing" type="range" min="0" max="48" value="16" />
+            </div>
+            <div class="control-box text-sm">إزاحة البداية: <span id="indentVal">0</span>px
+              <input id="indent" type="range" min="0" max="80" value="0" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <label>الهامش العلوي (مم)
+                <input id="marginTop" type="number" min="10" max="50" value="20" class="mt-1 w-full rounded border border-zinc-300 p-2" />
+              </label>
+              <label>الهامش السفلي (مم)
+                <input id="marginBottom" type="number" min="10" max="50" value="20" class="mt-1 w-full rounded border border-zinc-300 p-2" />
+              </label>
+              <label>الهامش الأيمن (مم)
+                <input id="marginRight" type="number" min="10" max="50" value="20" class="mt-1 w-full rounded border border-zinc-300 p-2" />
+              </label>
+              <label>الهامش الأيسر (مم)
+                <input id="marginLeft" type="number" min="10" max="50" value="20" class="mt-1 w-full rounded border border-zinc-300 p-2" />
+              </label>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <button id="saveDraft" class="rounded border border-zinc-300 p-2">حفظ المسودة</button>
+              <button id="loadDraft" class="rounded border border-zinc-300 p-2">تحميل المسودة</button>
+              <label class="rounded border border-zinc-300 p-2 text-center cursor-pointer col-span-2">استيراد DOCX
+                <input id="docxInput" type="file" accept=".docx" class="hidden" />
+              </label>
+              <button id="exportPdf" class="col-span-2 rounded bg-emerald-700 text-white p-2">تصدير PDF جاهز للطباعة</button>
+            </div>
+          </div>
         </div>
-    </div>
+
+        <div class="lg:col-span-2 grid gap-4">
+          <div class="bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
+            <h2 class="font-bold mb-2">4) محرر القصيدة</h2>
+            <div class="flex flex-wrap gap-2 mb-2">
+              <button data-action="bold" class="fmt rounded border px-3 py-1">Bold</button>
+              <button data-action="italic" class="fmt rounded border px-3 py-1">Italic</button>
+              <button data-action="increase" class="fmt rounded border px-3 py-1">A+</button>
+              <button data-action="decrease" class="fmt rounded border px-3 py-1">A-</button>
+              <button data-action="allBold" class="fmt rounded border px-3 py-1">Bold All</button>
+            </div>
+            <textarea id="poemInput" class="w-full h-64 rounded border border-zinc-300 p-3 leading-8" dir="rtl" placeholder="ألصق القصيدة هنا...">يا ليلُ هذا القلبُ ما زالَ ينتظرُ *** بينَ الحروفِ حنينُهُ يتكسّرُ
+نادتْ خطاهُ الريحَ: هل من عودةٍ؟ *** فالوجدُ في صدرِ المسافاتِ يسهرُ
+
+في كلِّ بيتٍ من قصيدتِنا رؤى *** وعلى حوافِ الصمتِ نجمٌ يُزهرُ
+أمضي وتبقى في يديك قصائدي *** فالعمرُ دونَ هواكِ شيءٌ يُقهرُ</textarea>
+          </div>
+
+          <div class="bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
+            <h2 class="font-bold mb-2">5) معاينة الصفحة الحية</h2>
+            <div class="overflow-auto bg-zinc-200 p-4 rounded-lg">
+              <div id="page" class="paper mx-auto" aria-label="print-preview">
+                <div id="innerPage" class="h-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <script>
-        const weddingDate = new Date('2008-10-09T00:00:00');
-        const text = `حبيبتي ونور عيني "نور".. 
-هذه الكلمات ليست مجرد حبر، بل هي نبضات قلبي التي لم تتوقف عن حبك منذ عام 2008. 
-أنتِ لستِ فقط زوجتي والدكتورة التي أفتخر بها، بل أنتِ "الحجية" التي تملأ بيتنا بالسكينة والبركة. 
-كل يوم يمر معكِ هو عمرٌ كامل من السعادة. شكراً لأنكِ في حياتي، وكل عيد حب ونحن معاً للأبد.`;
+      const pageSizes = {
+        A4: { w: 210, h: 297 },
+        B5: { w: 176, h: 250 },
+        A5: { w: 148, h: 210 },
+      };
 
-        function reveal() {
-            document.getElementById('cover').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('cover').style.display = 'none';
-                document.getElementById('mainCard').style.display = 'block';
-                typeWriter();
-                startClock();
-            }, 800);
+      const state = {
+        fontSize: 24,
+        lineHeight: 1.9,
+        paragraphSpacing: 16,
+        indent: 0,
+      };
+
+      const poemInput = document.getElementById("poemInput");
+
+      function applyInlineStyle(openTag, closeTag) {
+        const start = poemInput.selectionStart;
+        const end = poemInput.selectionEnd;
+        const text = poemInput.value;
+        const selected = text.slice(start, end);
+        const replacement = `${openTag}${selected}${closeTag}`;
+        poemInput.value = text.slice(0, start) + replacement + text.slice(end);
+        poemInput.focus();
+        poemInput.selectionStart = start;
+        poemInput.selectionEnd = start + replacement.length;
+        renderPreview();
+      }
+
+      function mmToPx(mm) {
+        return mm * 3.7795;
+      }
+
+      function normalizeGroups(raw) {
+        return raw
+          .split(/\n\s*\n/)
+          .map((group) => group.split("\n").map((line) => line.trim()).filter(Boolean))
+          .filter((group) => group.length > 0);
+      }
+
+      function splitHemistich(line) {
+        if (line.includes("***")) {
+          const [r, l] = line.split("***");
+          return [r.trim(), l.trim()];
+        }
+        const words = line.split(/\s+/);
+        const pivot = Math.ceil(words.length / 2);
+        return [words.slice(0, pivot).join(" "), words.slice(pivot).join(" ")];
+      }
+
+      function decorateText(line) {
+        return line
+          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+          .replace(/__(.*?)__/g, "<em>$1</em>")
+          .replace(/\[size:(\d+)\](.*?)\[\/size\]/g, "<span style='font-size:$1px'>$2</span>");
+      }
+
+      function lineTemplate(line, style, index) {
+        const safe = decorateText(line);
+
+        if (style === "parallel") {
+          const [rightPart, leftPart] = splitHemistich(line);
+          return `<div class='verse-grid poem-line'>
+              <div class='hamish-right'>${decorateText(rightPart)}</div>
+              <div class='spacer'>✦</div>
+              <div class='hamish-left'>${decorateText(leftPart)}</div>
+            </div>`;
         }
 
-        let i = 0;
-        function typeWriter() {
-            if (i < text.length) {
-                document.getElementById("messageArea").innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 50);
-            }
+        if (style === "lame") {
+          const alignClass = index % 2 === 0 ? "text-right" : "text-left";
+          return `<div class='poem-line ${alignClass}'>${safe}</div>`;
         }
 
-        function startClock() {
-            setInterval(() => {
-                const now = new Date();
-                const diff = now - weddingDate;
-
-                const y = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
-                const d = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
-                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const s = Math.floor((diff % (1000 * 60)) / 1000);
-                const total = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-                document.getElementById('timer').innerHTML = `
-                    <div class="heart-box">${y}<br><small>سنة</small></div>
-                    <div class="heart-box">${d}<br><small>يوم</small></div>
-                    <div class="heart-box">${h}<br><small>ساعة</small></div>
-                    <div class="heart-box">${s}<br><small>ثانية</small></div>
-                `;
-                document.getElementById('totalDays').innerText = `أحببتكِ حتى الآن ${total.toLocaleString()} يوماً..`;
-            }, 1000);
+        if (style === "triple") {
+          if (index % 2 === 0) {
+            return `<div class='poem-line text-center'>${safe}</div>`;
+          }
+          const [rightPart, leftPart] = splitHemistich(line);
+          return `<div class='verse-grid poem-line'><div class='hamish-right'>${decorateText(rightPart)}</div><div></div><div class='hamish-left'>${decorateText(leftPart)}</div></div>`;
         }
+
+        if (style === "center") {
+          return `<div class='poem-line text-center'>${safe}</div>`;
+        }
+
+        if (style === "takhmees") {
+          const mod = index % 3;
+          const cls = mod < 2 ? "text-center" : "text-right";
+          return `<div class='poem-line ${cls}'>${safe}</div>`;
+        }
+
+        return `<div class='poem-line'>${safe}</div>`;
+      }
+
+      function suggestStyle(lines) {
+        if (lines.every((l) => l.includes("***"))) return "parallel";
+        if (lines.length >= 4 && lines.every((_, i) => i % 2 === 0 || i % 2 === 1)) return "lame";
+        const shortLines = lines.filter((l) => l.split(" ").length <= 4).length;
+        if (shortLines > lines.length / 2) return "center";
+        if (lines.length % 3 === 0) return "takhmees";
+        return "triple";
+      }
+
+      function renderPreview() {
+        const page = document.getElementById("page");
+        const inner = document.getElementById("innerPage");
+        const layout = document.getElementById("layoutStyle").value;
+
+        document.getElementById("fontSizeVal").textContent = state.fontSize;
+        document.getElementById("lineHeightVal").textContent = state.lineHeight;
+        document.getElementById("paragraphSpacingVal").textContent = state.paragraphSpacing;
+        document.getElementById("indentVal").textContent = state.indent;
+
+        const selectedSize = pageSizes[document.getElementById("pageSize").value];
+        page.style.width = `${mmToPx(selectedSize.w)}px`;
+        page.style.height = `${mmToPx(selectedSize.h)}px`;
+
+        const margins = {
+          top: +document.getElementById("marginTop").value,
+          bottom: +document.getElementById("marginBottom").value,
+          right: +document.getElementById("marginRight").value,
+          left: +document.getElementById("marginLeft").value,
+        };
+
+        inner.style.paddingTop = `${mmToPx(margins.top)}px`;
+        inner.style.paddingBottom = `${mmToPx(margins.bottom)}px`;
+        inner.style.paddingRight = `${mmToPx(margins.right)}px`;
+        inner.style.paddingLeft = `${mmToPx(margins.left)}px`;
+
+        const groups = normalizeGroups(poemInput.value);
+        const title = document.getElementById("poemTitle").value;
+        const poet = document.getElementById("poetName").value;
+        const diwan = document.getElementById("diwanTitle").value;
+
+        let html = `
+          <div class='text-center mb-4'>
+            <div class='text-sm text-zinc-500'>${diwan}</div>
+            <h3 class='text-3xl font-bold'>${title}</h3>
+            <div class='text-base text-zinc-600'>${poet}</div>
+          </div>
+          <div class='preview-content' style='font-size:${state.fontSize}px; line-height:${state.lineHeight}; text-indent:${state.indent}px; --line-gap: ${state.paragraphSpacing / 2}px; --paragraph-gap:${state.paragraphSpacing}px;'>`;
+
+        groups.forEach((group) => {
+          html += `<div class='group-gap'>`;
+          group.forEach((line, idx) => {
+            html += lineTemplate(line, layout, idx);
+          });
+          html += `</div>`;
+        });
+
+        html += "</div>";
+        inner.innerHTML = html;
+      }
+
+      document.querySelectorAll("input, select, textarea").forEach((el) => {
+        el.addEventListener("input", () => {
+          if (el.id === "fontSize") state.fontSize = +el.value;
+          if (el.id === "lineHeight") state.lineHeight = +el.value;
+          if (el.id === "paragraphSpacing") state.paragraphSpacing = +el.value;
+          if (el.id === "indent") state.indent = +el.value;
+          renderPreview();
+        });
+      });
+
+      document.querySelectorAll(".fmt").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const action = btn.dataset.action;
+          if (action === "bold") applyInlineStyle("**", "**");
+          if (action === "italic") applyInlineStyle("__", "__");
+          if (action === "increase") applyInlineStyle("[size:30]", "[/size]");
+          if (action === "decrease") applyInlineStyle("[size:18]", "[/size]");
+          if (action === "allBold") {
+            poemInput.value = poemInput.value
+              .split("\n")
+              .map((l) => (l.trim() ? `**${l}**` : l))
+              .join("\n");
+            renderPreview();
+          }
+        });
+      });
+
+      document.getElementById("analyzeBtn").addEventListener("click", () => {
+        const lines = poemInput.value.split("\n").map((l) => l.trim()).filter(Boolean);
+        const suggestion = suggestStyle(lines);
+        document.getElementById("layoutStyle").value = suggestion;
+        const names = {
+          parallel: "الموازي",
+          lame: "العرجاء",
+          triple: "الثلاثي",
+          center: "أسلوب الوسط",
+          takhmees: "التخميس",
+        };
+        document.getElementById("analysisResult").textContent = `التحليل الذكي: نقترح نمط ${names[suggestion]} بناءً على بنية الأبيات.`;
+        renderPreview();
+      });
+
+      document.getElementById("saveDraft").addEventListener("click", () => {
+        const payload = {
+          poemInput: poemInput.value,
+          diwanTitle: document.getElementById("diwanTitle").value,
+          poemTitle: document.getElementById("poemTitle").value,
+          poetName: document.getElementById("poetName").value,
+          pageSize: document.getElementById("pageSize").value,
+          layoutStyle: document.getElementById("layoutStyle").value,
+          state,
+          margins: {
+            top: document.getElementById("marginTop").value,
+            bottom: document.getElementById("marginBottom").value,
+            right: document.getElementById("marginRight").value,
+            left: document.getElementById("marginLeft").value,
+          },
+        };
+        localStorage.setItem("diwanDraft", JSON.stringify(payload));
+        alert("تم حفظ المسودة محلياً");
+      });
+
+      document.getElementById("loadDraft").addEventListener("click", () => {
+        const raw = localStorage.getItem("diwanDraft");
+        if (!raw) {
+          alert("لا توجد مسودة محفوظة");
+          return;
+        }
+        const draft = JSON.parse(raw);
+        poemInput.value = draft.poemInput || "";
+        document.getElementById("diwanTitle").value = draft.diwanTitle || "";
+        document.getElementById("poemTitle").value = draft.poemTitle || "";
+        document.getElementById("poetName").value = draft.poetName || "";
+        document.getElementById("pageSize").value = draft.pageSize || "A4";
+        document.getElementById("layoutStyle").value = draft.layoutStyle || "parallel";
+
+        state.fontSize = +draft.state.fontSize;
+        state.lineHeight = +draft.state.lineHeight;
+        state.paragraphSpacing = +draft.state.paragraphSpacing;
+        state.indent = +draft.state.indent;
+
+        document.getElementById("fontSize").value = state.fontSize;
+        document.getElementById("lineHeight").value = state.lineHeight;
+        document.getElementById("paragraphSpacing").value = state.paragraphSpacing;
+        document.getElementById("indent").value = state.indent;
+
+        document.getElementById("marginTop").value = draft.margins.top;
+        document.getElementById("marginBottom").value = draft.margins.bottom;
+        document.getElementById("marginRight").value = draft.margins.right;
+        document.getElementById("marginLeft").value = draft.margins.left;
+
+        renderPreview();
+      });
+
+      document.getElementById("docxInput").addEventListener("change", async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        poemInput.value = result.value.trim();
+        renderPreview();
+      });
+
+      document.getElementById("exportPdf").addEventListener("click", async () => {
+        const page = document.getElementById("page");
+        const canvas = await html2canvas(page, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
+        const image = canvas.toDataURL("image/png");
+        const { jsPDF } = window.jspdf;
+
+        const selectedSize = pageSizes[document.getElementById("pageSize").value];
+        const pdf = new jsPDF({ orientation: selectedSize.w > selectedSize.h ? "l" : "p", unit: "mm", format: [selectedSize.w, selectedSize.h] });
+        pdf.addImage(image, "PNG", 0, 0, selectedSize.w, selectedSize.h, undefined, "FAST");
+        pdf.save(`${document.getElementById("poemTitle").value || "poem"}.pdf`);
+      });
+
+      renderPreview();
     </script>
-</body>
+  </body>
 </html>
